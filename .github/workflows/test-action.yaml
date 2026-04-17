@@ -1,0 +1,26 @@
+name: Test Action
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Run gha-sbom-action
+        uses: ./
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          create_pr: "false"
+
+      - name: Verify outputs
+        run: |
+          echo "SBOM dir: docs/SBOM"
+          ls -la docs/SBOM/ || echo "No SBOM files generated (expected if no deps)"
