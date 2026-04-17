@@ -1,0 +1,1 @@
+# gha-sbom-action
