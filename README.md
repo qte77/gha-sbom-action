@@ -4,6 +4,10 @@
 
 Composite GitHub Action that generates SPDX SBOM files using the GitHub dependency graph API and [Syft](https://github.com/anchore/syft), optionally opening a pull request with the results.
 
+## Prerequisites
+
+The calling repository must have a `pyproject.toml` (and optionally `uv.lock`). The action runs `uv sync` to resolve Python dependencies before scanning.
+
 ## Inputs
 
 | Name | Required | Default | Description |
