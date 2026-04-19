@@ -1,4 +1,4 @@
-name: "Generate SBOM"
+name: "SBOM Generator (Syft + GitHub Depgraph)"
 description: "Generate SPDX SBOM files via GitHub dependency graph and Syft, optionally opening a PR"
 author: "qte77"
 
