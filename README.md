@@ -1,6 +1,6 @@
 # gha-sbom-action
 
-![Version](https://img.shields.io/badge/version-0.1.0-8A2BE2)
+![Version](https://img.shields.io/badge/version-0.1.1-8A2BE2)
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Test Action](https://github.com/qte77/gha-sbom-action/actions/workflows/test-action.yaml/badge.svg)
 ![CodeFactor](https://www.codefactor.io/repository/github/qte77/gha-sbom-action/badge)
@@ -52,7 +52,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: qte77/gha-sbom-action@v0.1.0
+      - uses: qte77/gha-sbom-action@v0.1.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
