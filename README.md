@@ -55,7 +55,7 @@ jobs:
       - uses: qte77/gha-sbom-action@v0.1.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-```
+```bash
 
 ## What it does
 
