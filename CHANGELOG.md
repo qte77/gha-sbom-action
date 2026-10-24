@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 - Release workflows as thin callers of the `qte77/.github` reusables: `bump-version` (dispatch, opens a signed bump PR and syncs `uv.lock`), `tag-release` (tags `vX.Y.Z` when the `pyproject.toml` version changes on `main`) and `publish-release` (dispatch, GitHub Release from the CHANGELOG block); none of them delete or overwrite tags or releases (#23)
 
+### Fixed
+
+- Dependency-graph SBOM export no longer commits the API error body (e.g. 404 when Dependency Graph is disabled) as `github-depgraph.spdx.json`; the file is only written when the response is a valid SPDX document, otherwise the step emits a warning and skips it (#16)
+
 ## [0.1.1] - 2026-04-22
 
 ### Changed
