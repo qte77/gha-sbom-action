@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- README follows the qte77 doc-structure canon (What → How → Why → Refs → License); prerequisites, inputs, outputs and internals moved to `docs/configuration.md` (#21)
+
 ### Fixed
 
 - Dependency-graph SBOM export no longer commits the API error body (e.g. 404 when Dependency Graph is disabled) as `github-depgraph.spdx.json`; the file is only written when the response is a valid SPDX document, otherwise the step emits a warning and skips it (#16)
