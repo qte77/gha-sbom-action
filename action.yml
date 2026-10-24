@@ -56,13 +56,22 @@ runs:
       run: mkdir -p '${{ inputs.sbom_dir }}'
 
     - name: Export GitHub dependency graph SBOM
-      continue-on-error: true
       shell: bash
       env:
         GH_TOKEN: ${{ inputs.github_token }}
         REPO: ${{ github.repository }}
         SBOM_DIR: ${{ inputs.sbom_dir }}
-      run: gh api "repos/$REPO/dependency-graph/sbom" --jq '.sbom' > "$SBOM_DIR/github-depgraph.spdx.json"
+      # Reason: on 4xx/5xx gh api still writes the error body to stdout, so write to a temp
+      # file outside SBOM_DIR and only move it into place once it parses as an SPDX document.
+      run: |
+        tmp="${RUNNER_TEMP:-/tmp}/github-depgraph.spdx.json"
+        if gh api "repos/$REPO/dependency-graph/sbom" --jq '.sbom' > "$tmp" \
+          && jq -e '.spdxVersion' "$tmp" > /dev/null; then
+          mv "$tmp" "$SBOM_DIR/github-depgraph.spdx.json"
+        else
+          echo "::warning::dependency-graph/sbom fetch failed or returned no SPDX document; skipping github-depgraph.spdx.json (is Dependency Graph enabled?)"
+          rm -f "$tmp"
+        fi
 
     - name: Cache Syft DB
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
