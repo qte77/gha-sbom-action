@@ -1,11 +1,42 @@
 version: 2
 updates:
   - package-ecosystem: "github-actions"
+    # Reason: "/" also covers the root action.yml (Dependabot bumped its setup-uv pin in #33).
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      # Reason: init and analyze are one codeql-action release; separate PRs drift apart.
+      # Listed first because a dependency joins the first group it matches.
+      codeql-action:
+        patterns:
+          - "github/codeql-action*"
+      actions-security-updates:
+        applies-to: security-updates
+        patterns:
+          - "*"
+      # Majors stay out of this group, so each arrives as its own PR.
+      actions-version-updates:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
 
-  - package-ecosystem: "pip"
+  - package-ecosystem: "uv"
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      python-security-updates:
+        applies-to: security-updates
+        patterns:
+          - "*"
+      python-version-updates:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
