@@ -1,0 +1,23 @@
+name: Test scripts
+
+on:
+  pull_request:
+    paths: ["scripts/**", "tests/**", "action.yml", ".github/workflows/test-scripts.yaml"]
+  push:
+    branches: [main]
+    paths: ["scripts/**", "tests/**", "action.yml", ".github/workflows/test-scripts.yaml"]
+
+permissions:
+  contents: read
+
+jobs:
+  bats:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: shellcheck
+        run: shellcheck scripts/*.sh
+      - name: bats
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq bats
+          bats tests/
