@@ -27,6 +27,9 @@ The calling repository must have a `pyproject.toml` (and optionally `uv.lock`). 
 1. Installs uv and Python, then runs `uv sync` to resolve dependencies
 2. Fetches the GitHub dependency graph SBOM via `gh api` (SPDX JSON) into `github-depgraph.spdx.json`
 3. Runs Syft against the repo directory (SPDX JSON) into `syft-scan.spdx.json`
-4. If files changed and `create_pr` is `true`, opens a PR with the updates
+4. If files changed and `create_pr` is `true`, commits them through the GitHub Git Data API
+   (`scripts/api-commit.sh`: blobs, tree, commit with no author or committer, branch ref) and opens
+   a PR. GitHub signs API-created commits, so the PR passes a required-signatures rule; nothing is
+   committed or pushed from the runner
 
 The calling workflow needs `contents: write` and `pull-requests: write` permissions for step 4.

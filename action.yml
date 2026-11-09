@@ -108,14 +108,13 @@ runs:
       if: inputs.create_pr == 'true' && steps.check-changes.outputs.changed == 'true'
       shell: bash
       env:
-        GITHUB_TOKEN: ${{ inputs.github_token }}
+        GH_TOKEN: ${{ inputs.github_token }}
+        REPO: ${{ github.repository }}
+      # Reason: commit through the API (scripts/api-commit.sh) so GitHub signs it; a runner's
+      # local `git commit` is unsigned and is blocked by a required-signatures rule.
       run: |
-        git config user.name "github-actions"
-        git config user.email "github-actions@github.com"
         BRANCH="auto/sbom-update-$(date +%Y%m%d-%H%M%S)"
-        git checkout -b "$BRANCH"
-        git commit -m "docs: update SBOM"
-        git push -u origin "$BRANCH"
+        bash "$GITHUB_ACTION_PATH/scripts/api-commit.sh" "$REPO" "$(git rev-parse HEAD)" "$BRANCH" "docs: update SBOM"
         PR_URL=$(gh pr create --base main --head "$BRANCH" \
           --title "docs: update SBOM" \
           --body "Auto-generated SBOM update by [gha-sbom-action](https://github.com/qte77/gha-sbom-action)")
