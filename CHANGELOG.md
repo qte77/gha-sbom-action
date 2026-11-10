@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Changed
 
 - README follows the qte77 doc-structure canon (What → How → Why → Refs → License); prerequisites, inputs, outputs and internals moved to `docs/configuration.md` (#21)
+- CI pins `actions/checkout` and `github/codeql-action` to full commit SHAs (with a `# vX.Y.Z` comment), so the workflows run under a "require full-length SHA pinning" Actions policy; Dependabot uses the `uv` ecosystem instead of `pip` and groups its updates (codeql-action together; minor and patch per ecosystem; majors as separate PRs)
 
 ### Fixed
 
