@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- Release workflows re-pinned to `qte77/.github@43ad121`. `tag-release` now also publishes the GitHub Release for a new tag in the same run, chained on the reusable's new `tag` output, so a merged bump no longer needs a manual `publish-release` dispatch (it stays as a retry). Upstream, the bump commit is now created through `createCommitOnBranch`, so GitHub signs it; the new optional App-token inputs stay unset.
 - README follows the qte77 doc-structure canon (What → How → Why → Refs → License); prerequisites, inputs, outputs and internals moved to `docs/configuration.md` (#21)
 - CI pins `actions/checkout` and `github/codeql-action` to full commit SHAs (with a `# vX.Y.Z` comment), so the workflows run under a "require full-length SHA pinning" Actions policy; Dependabot uses the `uv` ecosystem instead of `pip` and groups its updates (codeql-action together; minor and patch per ecosystem; majors as separate PRs)
 
