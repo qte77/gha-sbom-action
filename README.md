@@ -3,7 +3,7 @@
 Keep SPDX SBOMs for your repository up to date automatically — one composite GitHub Action, two
 sources (GitHub dependency graph + Syft), delivered as a reviewable PR.
 
-![Version](https://img.shields.io/badge/version-0.1.1-8A2BE2)
+![Version](https://img.shields.io/badge/version-0.1.2-8A2BE2)
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Test Action](https://github.com/qte77/gha-sbom-action/actions/workflows/test-action.yaml/badge.svg)
 ![CodeFactor](https://www.codefactor.io/repository/github/qte77/gha-sbom-action/badge)
