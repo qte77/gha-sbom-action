@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- Release workflows re-pinned to `qte77/.github@a32769a` (main 2026-11-12, qte77/.github#64); compatibility checked, no breaking input/output changes.
+
 ## [0.1.2] - 2026-11-11
 
 ### Added
