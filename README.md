@@ -16,7 +16,7 @@ sources (GitHub dependency graph + Syft), delivered as a reviewable PR.
 - Combines two views: GitHub's dependency graph export and a Syft scan of the repository files
 - Writes both files to one directory (`docs/SBOM` by default) so they live alongside your code
 - Keeps one SBOM pull request per repository, opened or updated in place only when the SBOMs changed,
-  and enables auto-merge on it (opt out with `auto_merge: "false"`)
+  and enables auto-merge on it when the run built on `main`'s current tip (opt out with `auto_merge: "false"`)
 - Exposes `changed` and `pr_url` outputs for follow-up steps
 
 ## How

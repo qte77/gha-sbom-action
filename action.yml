@@ -20,7 +20,7 @@ inputs:
     required: false
     default: "true"
   auto_merge:
-    description: "Enable auto-merge (squash) on the SBOM PR, or merge it directly when auto-merge is unavailable and it is mergeable; 'false' leaves it open for review"
+    description: "Enable auto-merge (squash) on the SBOM PR, or merge it directly when auto-merge is unavailable and it is mergeable; only when the run built on main's current tip. 'false' leaves it open for review"
     required: false
     default: "true"
   github_token:
@@ -120,8 +120,9 @@ runs:
       # branch, force-moved each run, keeps at most one SBOM PR open (scripts/sbom-pr.sh).
       run: |
         BRANCH="auto/sbom-update"
-        bash "$GITHUB_ACTION_PATH/scripts/api-commit.sh" "$REPO" "$(git rev-parse HEAD)" "$BRANCH" "docs: update SBOM"
-        out=$(bash "$GITHUB_ACTION_PATH/scripts/sbom-pr.sh" "$REPO" "$BRANCH" "docs: update SBOM" \
+        BASE=$(git rev-parse HEAD)
+        COMMIT=$(bash "$GITHUB_ACTION_PATH/scripts/api-commit.sh" "$REPO" "$BASE" "$BRANCH" "docs: update SBOM")
+        out=$(bash "$GITHUB_ACTION_PATH/scripts/sbom-pr.sh" "$REPO" "$BRANCH" "$COMMIT" "$BASE" "docs: update SBOM" \
           "Auto-generated SBOM update by [gha-sbom-action](https://github.com/qte77/gha-sbom-action)" "$AUTO_MERGE")
         echo "$out"
         echo "pr_url=$(tail -n1 <<< "$out")" >> "$GITHUB_OUTPUT"
