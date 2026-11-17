@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Commit the staged changes through the GitHub Git Data API and create a branch at the new commit.
+# Commit the staged changes through the GitHub Git Data API and point a branch at the new commit
+# (created, or force-moved if it already exists).
 # Usage: api-commit.sh <owner/repo> <base-sha> <branch> <message>
 # Prints the new commit sha. Needs GH_TOKEN (or GITHUB_TOKEN) for gh, run from the repo root.
 #
@@ -37,5 +38,11 @@ tree=$(gh api "repos/$repo/git/trees" --input "$tmp/tree.json" --jq '.sha')
 jq -n --arg m "$message" --arg t "$tree" --arg p "$base" '{message: $m, tree: $t, parents: [$p]}' > "$tmp/commit.json"
 commit=$(gh api "repos/$repo/git/commits" --input "$tmp/commit.json" --jq '.sha')
 
-gh api "repos/$repo/git/refs" -f "ref=refs/heads/$branch" -f "sha=$commit" --jq '.ref' > /dev/null
+# Reason: a fixed branch is refreshed in place (one open SBOM PR per repo). The new commit's
+# parent is the base, not the branch's old head, so moving an existing branch needs force.
+if gh api "repos/$repo/git/ref/heads/$branch" --jq '.ref' > /dev/null 2>&1; then
+  gh api -X PATCH "repos/$repo/git/refs/heads/$branch" -f "sha=$commit" -F force=true --jq '.ref' > /dev/null
+else
+  gh api "repos/$repo/git/refs" -f "ref=refs/heads/$branch" -f "sha=$commit" --jq '.ref' > /dev/null
+fi
 echo "$commit"

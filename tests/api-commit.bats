@@ -22,6 +22,8 @@ case "$*" in
   *git/blobs*) echo "blob-$(jq -r '.content' "$input" | base64 -d | head -c 5)" ;;
   *git/trees*) echo "tree9" ;;
   *git/commits*) echo "commit7" ;;
+  *"-X PATCH"*git/refs/heads/*) echo "refs/heads/x" ;;
+  *git/ref/heads/*) [[ "${REF_EXISTS:-0}" == 1 ]] && echo "refs/heads/x" || { echo "Not Found" >&2; exit 1; } ;;
   *git/refs*) echo "refs/heads/x" ;;
 esac
 STUB
@@ -75,4 +77,13 @@ teardown() { rm -rf "$WORK"; }
   run bash "$SCRIPT" owner/repo
   [ "$status" -ne 0 ]
   [[ "$output" == *usage* ]]
+}
+
+@test "force-moves an existing branch to the new commit instead of creating it" {
+  export REF_EXISTS=1
+  run bash "$SCRIPT" owner/repo base123 auto/sbom-update "docs: update SBOM"
+  [ "$status" -eq 0 ]
+  [ "$output" = "commit7" ]
+  grep -q 'CALL api -X PATCH repos/owner/repo/git/refs/heads/auto/sbom-update -f sha=commit7 -F force=true' "$GH_LOG"
+  ! grep -q 'CALL api repos/owner/repo/git/refs -f ref=' "$GH_LOG"
 }
