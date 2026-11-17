@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- One SBOM PR per repository: commits go to the fixed branch `auto/sbom-update` (was a new
+  `auto/sbom-update-<timestamp>` branch per run), force-moved each run by `scripts/api-commit.sh`, so an
+  open SBOM PR is updated in place instead of a new one stacking up. `pr_url` is that PR's URL.
+- New input `auto_merge` (default `true`): enables auto-merge (squash) on the SBOM PR, or merges it
+  directly when auto-merge is unavailable and it is mergeable; never waits or fails the run (`scripts/sbom-pr.sh`,
+  same approach as qte77/gha-rxiv-feed-action#249 without the wait). Set `false` to keep reviewing SBOM PRs by hand.
 - Release workflows re-pinned to `qte77/.github@a32769a` (main 2026-11-12, qte77/.github#64); compatibility checked, no breaking input/output changes.
 
 ## [0.1.2] - 2026-11-11

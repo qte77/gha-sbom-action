@@ -15,7 +15,8 @@ sources (GitHub dependency graph + Syft), delivered as a reviewable PR.
 - Generates SPDX JSON SBOMs for your repository on every run, with no manual steps
 - Combines two views: GitHub's dependency graph export and a Syft scan of the repository files
 - Writes both files to one directory (`docs/SBOM` by default) so they live alongside your code
-- Opens a pull request only when the SBOMs actually changed, or just reports the change
+- Keeps one SBOM pull request per repository, opened or updated in place only when the SBOMs changed,
+  and enables auto-merge on it (opt out with `auto_merge: "false"`)
 - Exposes `changed` and `pr_url` outputs for follow-up steps
 
 ## How

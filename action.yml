@@ -16,7 +16,11 @@ inputs:
     required: false
     default: "3.12"
   create_pr:
-    description: "Whether to create a PR with SBOM changes"
+    description: "Whether to open (or update) a PR with SBOM changes"
+    required: false
+    default: "true"
+  auto_merge:
+    description: "Enable auto-merge (squash) on the SBOM PR, or merge it directly when auto-merge is unavailable and it is mergeable; 'false' leaves it open for review"
     required: false
     default: "true"
   github_token:
@@ -31,7 +35,7 @@ outputs:
     description: "Whether SBOM files changed ('true' or 'false')"
     value: ${{ steps.check-changes.outputs.changed }}
   pr_url:
-    description: "URL of the created PR (empty if create_pr is false or no changes)"
+    description: "URL of the SBOM PR, newly opened or the open one updated in place (empty if create_pr is false or no changes)"
     value: ${{ steps.create-pr.outputs.pr_url }}
 
 runs:
@@ -110,12 +114,14 @@ runs:
       env:
         GH_TOKEN: ${{ inputs.github_token }}
         REPO: ${{ github.repository }}
+        AUTO_MERGE: ${{ inputs.auto_merge }}
       # Reason: commit through the API (scripts/api-commit.sh) so GitHub signs it; a runner's
-      # local `git commit` is unsigned and is blocked by a required-signatures rule.
+      # local `git commit` is unsigned and is blocked by a required-signatures rule. One fixed
+      # branch, force-moved each run, keeps at most one SBOM PR open (scripts/sbom-pr.sh).
       run: |
-        BRANCH="auto/sbom-update-$(date +%Y%m%d-%H%M%S)"
+        BRANCH="auto/sbom-update"
         bash "$GITHUB_ACTION_PATH/scripts/api-commit.sh" "$REPO" "$(git rev-parse HEAD)" "$BRANCH" "docs: update SBOM"
-        PR_URL=$(gh pr create --base main --head "$BRANCH" \
-          --title "docs: update SBOM" \
-          --body "Auto-generated SBOM update by [gha-sbom-action](https://github.com/qte77/gha-sbom-action)")
-        echo "pr_url=$PR_URL" >> "$GITHUB_OUTPUT"
+        out=$(bash "$GITHUB_ACTION_PATH/scripts/sbom-pr.sh" "$REPO" "$BRANCH" "docs: update SBOM" \
+          "Auto-generated SBOM update by [gha-sbom-action](https://github.com/qte77/gha-sbom-action)" "$AUTO_MERGE")
+        echo "$out"
+        echo "pr_url=$(tail -n1 <<< "$out")" >> "$GITHUB_OUTPUT"
