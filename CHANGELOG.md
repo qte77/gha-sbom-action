@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   only happen when the run built on `main`'s current tip; otherwise the PR stays open with a notice.
   A fork PR that reuses the branch name is never picked up as the SBOM PR.
 - Release workflows re-pinned to `qte77/.github@a32769a` (main 2026-11-12, qte77/.github#64); compatibility checked, no breaking input/output changes.
+- Release workflows (`bump-version`, `tag-release`, `publish-release`) re-pinned to the `qte77/.github` v0.1.2 tag commit in tag form (`@aeef158f…  # v0.1.2`), so Dependabot can follow qte77/.github releases (#51). The called workflow files are unchanged.
 
 ## [0.1.2] - 2026-11-11
 
